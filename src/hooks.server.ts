@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import '$lib/db';
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { redirect, type Handle } from '@sveltejs/kit';
-import { AppDataSource } from '$lib/server/db/DataSource';
+import { appDataSource } from '$lib/server/db/DataSource';
 import { User } from '$lib/entities/User';
 
 export const handle: Handle = async ({event, resolve}) => {
@@ -10,8 +10,8 @@ export const handle: Handle = async ({event, resolve}) => {
 	event.locals.supabaseClient = supabaseClient;
 	event.locals.session = session;
 
-	if (!AppDataSource.isInitialized) {
-		await AppDataSource.initialize();
+	if (!appDataSource.isInitialized) {
+		await appDataSource.initialize();
 	}
 
  	if (event.locals.session) {

@@ -22,43 +22,40 @@ import { CooperativeVillain } from '$lib/entities/CooperativeVillain';
 import { CooperativeVillainAbility } from '$lib/entities/CooperativeVillainAbility';
 import { CooperativeVillainAttributes } from '$lib/entities/CooperativeVillainAttributes';
 
-let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
-let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
+const useProcessEnv = (process.env.NODE_ENV === 'production' && process.env.PRIVATE_SUPABASE_HOST && process.env.PRIVATE_SUPABASE_PASSWORD);
+const host = useProcessEnv ? process.env.PRIVATE_SUPABASE_HOST : env.PRIVATE_SUPABASE_HOST;
+const password = useProcessEnv ? process.env.PRIVATE_SUPABASE_PASSWORD : env.PRIVATE_SUPABASE_PASSWORD;
+const port = isNaN(Number(env.PRIVATE_SUPABASE_PORT)) ? 5432 : Number(env.PRIVATE_SUPABASE_PORT);
 
-if (process.env.NODE_ENV === 'production' && process.env.PRIVATE_SUPABASE_HOST && process.env.PRIVATE_SUPABASE_PASSWORD) {
-    PRIVATE_SUPABASE_HOST = process.env.PRIVATE_SUPABASE_HOST;
-    PRIVATE_SUPABASE_PASSWORD = process.env.PRIVATE_SUPABASE_PASSWORD;
-}
-
-export const AppDataSource = new DataSource({
+export const appDataSource = new DataSource({
     type: "postgres",
-    host: PRIVATE_SUPABASE_HOST,
-    port: 5432,
+    host: host,
+    port: port,
     username: "postgres",
-    password: PRIVATE_SUPABASE_PASSWORD,
+    password: password,
     database: "postgres",
-    entities: [ 
-        UserHomebrewFavorite, 
-        UserRole, 
-        User, 
+    entities: [
+        UserHomebrewFavorite,
+        UserRole,
+        User,
         Homebrew,
-        HeroAbility, 
-        HeroActionDice, 
-        HeroAttributes, 
+        HeroAbility,
+        HeroActionDice,
+        HeroAttributes,
         CompetitiveVillainAbility,
         CompetitiveVillainAttributes,
         CooperativeVillainAbility,
         CooperativeVillainAttributes,
-        Image, 
-        Token, 
-        Hero, 
-        SkillCard, 
+        Image,
+        Token,
+        Hero,
+        SkillCard,
         CompetitiveVillain,
         CooperativeVillain,
-        Villain, 
-        VillainAbilityCard, 
+        Villain,
+        VillainAbilityCard,
     ],
-    subscribers: [ EntitySubscriber, AuthoredEntitySubscriber ],
+    subscribers: [EntitySubscriber, AuthoredEntitySubscriber],
     // For development only
     //synchronize: true,
     //dropSchema: true
